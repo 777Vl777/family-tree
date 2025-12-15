@@ -5,27 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Древо рода Ларионовых</title>
   <style>
-    :root{--accent:#1b3b6f;--accent2:#4a90e2}
-    body{font-family:Segoe UI, Tahoma, sans-serif;background:linear-gradient(180deg,#eaf6ff,#f7fbff);margin:0;padding:28px;color:#222}
-    header{text-align:center;margin-bottom:18px}
-    header h1{color:var(--accent);font-size:2.2rem;margin:0}
-    #controls{display:flex;justify-content:center;gap:10px;margin:18px 0;flex-wrap:wrap}
-    input.search{padding:10px 12px;border-radius:12px;border:1px solid #cfe8ff;width:320px}
-    button{padding:10px 14px;border-radius:10px;border:0;background:var(--accent2);color:#fff;cursor:pointer}
-    .tree{max-width:1100px;margin:0 auto;position:relative}
-    .generation{display:flex;justify-content:center;flex-wrap:wrap;margin:40px 0}
-    .member{background:linear-gradient(135deg,#fff,#eef9ff);border:2px solid var(--accent2);border-radius:12px;padding:14px;width:180px;margin:12px;text-align:center;cursor:pointer;box-shadow:0 6px 20px rgba(10,30,60,0.06);transition:transform .18s}
-    .member:hover{transform:translateY(-6px)}
+    :root{--accent:#1b3b6f;--accent2:#4a90e2;--bg:#f4f8ff;--card:#ffffff;--border:#d6e9ff}
+    *{box-sizing:border-box}
+    body{font-family:Segoe UI, Tahoma, sans-serif;background:radial-gradient(circle at 20% 20%, rgba(74,144,226,0.08), transparent 40%),radial-gradient(circle at 80% 10%, rgba(27,59,111,0.08), transparent 35%),linear-gradient(180deg,#eaf3ff,#f9fbff);margin:0;padding:0;color:#1b2733}
+    header{padding:32px 18px 12px;text-align:center}
+    header h1{color:var(--accent);font-size:2.4rem;margin:0 0 8px}
+    header p{margin:0;color:#3a4a63}
+    .controls{display:flex;justify-content:center;gap:10px;margin:18px auto;flex-wrap:wrap;padding:0 12px}
+    input.search{padding:12px 14px;border-radius:14px;border:1px solid var(--border);width:320px;background:#fff;box-shadow:0 8px 30px rgba(27,59,111,0.06)}
+    button{padding:10px 14px;border-radius:12px;border:0;background:var(--accent2);color:#fff;cursor:pointer;box-shadow:0 10px 24px rgba(74,144,226,0.25);transition:transform .12s, box-shadow .12s}
+    button:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(74,144,226,0.35)}
+    main{max-width:1200px;margin:0 auto;padding:0 18px 32px}
+    .layout{display:grid;grid-template-columns:320px 1fr;gap:18px}
+    .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 12px 36px rgba(15,46,100,0.08);position:sticky;top:12px;height:fit-content}
+    .panel h3{margin:10px 0;font-size:1rem;color:var(--accent)}
+    .legend{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px}
+    .legend .tag{padding:6px 10px;border-radius:10px;background:#eef4ff;border:1px solid var(--border);color:#123a63;font-size:.88rem}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+    .stat-card{background:linear-gradient(135deg,#fff,#f3f7ff);border:1px solid var(--border);border-radius:12px;padding:10px}
+    .stat-card .label{color:#667890;font-size:.86rem}
+    .stat-card .value{font-weight:700;color:var(--accent);font-size:1.1rem}
+    .notes{background:#f7fbff;border:1px dashed var(--border);border-radius:12px;padding:12px;color:#3c4f68;font-size:.95rem}
+    .view-toggle{display:flex;gap:8px;margin:12px 0 4px}
+    .view-toggle button{background:#eef4ff;color:#1b3b6f;border:1px solid var(--border)}
+    .view-toggle button.active{background:var(--accent2);color:#fff}
+    .filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+    .filters button{background:transparent;border:1px solid var(--border);padding:8px 12px;border-radius:10px;color:var(--accent2);cursor:pointer;box-shadow:none}
+    .filters button.active{background:var(--accent2);color:#fff}
+    .tree{position:relative}
+    .generation{display:flex;justify-content:center;flex-wrap:wrap;margin:34px 0}
+    .generation h3{width:100%;text-align:center;color:#223b5b;margin:0 0 12px}
+    .member{background:linear-gradient(135deg,#fff,#eef9ff);border:2px solid var(--accent2);border-radius:14px;padding:14px;width:190px;margin:12px;text-align:center;cursor:pointer;box-shadow:0 10px 28px rgba(10,30,60,0.08);transition:transform .18s, box-shadow .18s}
+    .member:hover{transform:translateY(-6px);box-shadow:0 16px 32px rgba(10,30,60,0.14)}
     .member img{width:96px;height:96px;border-radius:50%;object-fit:cover;border:3px solid #fff;margin-bottom:8px}
-    .name{font-weight:700;color:var(--accent)}
+    .name{font-weight:700;color:var(--accent);font-size:1.02rem}
     .years{font-size:.86rem;color:#666}
     .bio{display:none;color:#123a63;margin-top:8px;font-size:.86rem}
+    .role-badge{display:inline-flex;align-items:center;gap:6px;background:#eef4ff;border:1px solid var(--border);padding:5px 9px;border-radius:9px;font-size:.82rem;color:#123a63}
+    .detail-panel{margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:12px;background:#f9fbff}
+    .detail-panel .title{font-weight:700;color:var(--accent)}
     svg#lines{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
     footer{text-align:center;margin-top:28px;padding:18px;color:#445}
-    .filters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-    .filters button{background:transparent;border:1px solid #d6e9ff;padding:8px 12px;border-radius:8px;color:var(--accent2);cursor:pointer}
-    .filters button.active{background:var(--accent2);color:#fff}
-    @media(max-width:700px){input.search{width:60vw}}
+    @media(max-width:960px){.layout{grid-template-columns:1fr}}
+    @media(max-width:700px){body{padding:0 0 12px} header{padding:22px 12px 8px} header h1{font-size:1.8rem} .controls input.search{width:70vw} .member{width:44vw;margin:8px;padding:11px} .member img{width:72px;height:72px} .generation{margin:24px 0}}
   </style>
 </head>
 <body>
@@ -34,24 +56,52 @@
     <p>Поколения, объединённые памятью и вниманием</p>
   </header>
 
-  <div id="controls">
+  <div class="controls">
     <input class="search" id="searchInput" placeholder="Поиск по имени...">
     <button onclick="searchMember()">Найти</button>
     <button onclick="resetHighlight()">Сброс</button>
   </div>
 
-  <div class="filters">
-    <button data-role="" class="active" onclick="filterRole(this)">Все</button>
-    <button data-role="Прадед" onclick="filterRole(this)">Прадеды</button>
-    <button data-role="Дед" onclick="filterRole(this)">Деды</button>
-    <button data-role="Отец" onclick="filterRole(this)">Родители</button>
-    <button data-role="Сын" onclick="filterRole(this)">Дети</button>
-    <button data-role="Питомец" onclick="filterRole(this)">Питомцы</button>
-  </div>
+  <main>
+    <div class="layout">
+      <aside class="panel">
+        <div class="view-toggle">
+          <button id="toggleCards" class="active" onclick="setView('cards')">Карточки</button>
+          <button id="toggleList" onclick="setView('list')">Компактно</button>
+        </div>
 
-  <div class="tree" id="tree">
-    <svg id="lines"></svg>
-  </div>
+        <h3>Фильтры по роли</h3>
+        <div class="filters">
+          <button data-role="" class="active" onclick="filterRole(this)">Все</button>
+          <button data-role="Прадед" onclick="filterRole(this)">Прадеды</button>
+          <button data-role="Дед" onclick="filterRole(this)">Деды</button>
+          <button data-role="Отец" onclick="filterRole(this)">Родители</button>
+          <button data-role="Сын" onclick="filterRole(this)">Дети</button>
+          <button data-role="Питомец" onclick="filterRole(this)">Питомцы</button>
+        </div>
+
+        <h3>Цветовая легенда</h3>
+        <div class="legend" id="legend"></div>
+
+        <h3>Быстрые факты</h3>
+        <div class="stats" id="stats"></div>
+
+        <div class="notes">
+          Нажмите на карточку, чтобы открыть небольшую историю. Поиск подсвечивает совпадения и разворачивает заметки.
+        </div>
+
+        <div class="detail-panel" id="detailPanel" hidden>
+          <div class="title" id="detailName"></div>
+          <div class="years" id="detailYears"></div>
+          <div class="bio" id="detailBio"></div>
+        </div>
+      </aside>
+
+      <section class="tree" id="tree">
+        <svg id="lines"></svg>
+      </section>
+    </div>
+  </main>
 
   <footer>
     © 2025 — Дерево рода. Статическая версия для GitHub Pages.
@@ -67,8 +117,13 @@ const members = [
   {id:6,name:"Оксана",role:"Мать",years:"1980–",bio:"Педагог, любит литературу и музыку.",photoUrl:"https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=6",hiddenLink:"#"},
   {id:7,name:"Влад",role:"Сын",years:"1998–",bio:"Студент прикладной информатики, начинающий предприниматель.",photoUrl:"https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=7",hiddenLink:"#"},
   {id:8,name:"Никита",role:"Сын",years:"2000–",bio:"Увлекается музыкой и спортом.",photoUrl:"https://images.unsplash.com/photo-1603415526960-f7e0328c6b91?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8",hiddenLink:"#"},
-  {id:9,name:"Макс",role:"Питомец",years:"2018–",bio:"Кот семьи, ленив и игрив.",photoUrl:"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9",hiddenLink:"#"}
+  {id:9,name:"Макс",role:"Питомец",years:"2018–",bio:"Кот семьи, ленив и игрив.",photoUrl:"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9",hiddenLink:"#"},
 ];
+
+const roleColors = {
+  'Прадед':'#1b3b6f','Прабабушка':'#2a4a82','Дед':'#4069a0','Бабушка':'#587cb0','Отец':'#3b8ac4','Мать':'#5a9bd2','Сын':'#6cb7f2','Дочь':'#78c4f7','Питомец':'#ff9f43'
+};
+let currentView = 'cards';
 
 function renderTree() {
   const tree = document.getElementById('tree');
@@ -84,40 +139,154 @@ function renderTree() {
     const genDiv = document.createElement('div');
     genDiv.className='generation';
     genDiv.id=r.id;
-    const h = document.createElement('h3'); h.style.width='100%'; h.style.textAlign='center'; h.textContent=r.name;
+    const h = document.createElement('h3');
+    h.textContent=r.name;
     genDiv.appendChild(h);
     members.filter(m=>r.filter.includes(m.role)).forEach(m=>{
-      const mDiv = document.createElement('div'); mDiv.className='member'; mDiv.id='m'+m.id;
-      mDiv.innerHTML=`<img src="${m.photoUrl}" alt="photo"><div class="name">${m.name}</div><div class="years">${m.years}</div><div class="bio">${m.bio}</div>`;
-      mDiv.addEventListener('click',()=>{const bio=mDiv.querySelector('.bio'); bio.style.display=(bio.style.display==='block')?'none':'block';});
+      const mDiv = document.createElement('div');
+      mDiv.className='member';
+      mDiv.id='m'+m.id;
+      mDiv.setAttribute('data-role', m.role);
+      mDiv.innerHTML=`
+        <img src="${m.photoUrl}" alt="${m.name}">
+        <div class="name">${m.name}</div>
+        <div class="years">${m.years}</div>
+        <div class="role-badge" style="border-color:${roleColors[m.role]||'#d6e9ff'};color:${roleColors[m.role]||'#123a63'}">
+          <span style="width:10px;height:10px;border-radius:50%;background:${roleColors[m.role]||'#cbdfff'}"></span>
+          ${m.role}
+        </div>
+        <div class="bio">${m.bio}</div>`;
+      mDiv.addEventListener('click',()=>toggleBio(mDiv,m));
       genDiv.appendChild(mDiv);
     });
     tree.appendChild(genDiv);
   });
+  syncViewMode();
 }
+
+function toggleBio(card, member){
+  const bio=card.querySelector('.bio');
+  const isOpen=bio.style.display==='block';
+  document.querySelectorAll('.bio').forEach(b=>b.style.display='none');
+  if(!isOpen){
+    bio.style.display='block';
+    fillDetail(member);
+  } else {
+    hideDetail();
+  }
+}
+
 function filterRole(button){
   const role=button.getAttribute('data-role');
   document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
   button.classList.add('active');
   document.querySelectorAll('.member').forEach(m=>{
-    const r=members.find(mem=> 'm'+mem.id===m.id).role;
-    m.style.display=(role===''||r===role)?'block':'none';
+    const mRole=m.getAttribute('data-role');
+    m.style.display=(role===''||mRole===role)?'block':'none';
   });
 }
+
 function searchMember(){
   const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  let firstMatch=null;
   document.querySelectorAll('.member').forEach(m=>{
     const text=m.textContent.toLowerCase();
     const bio=m.querySelector('.bio');
-    if(q!=='' && text.includes(q)){
-      m.style.transform='scale(1.06)'; m.style.borderColor='#1b3b6f'; if(bio) bio.style.display='block';
-    } else { m.style.transform='scale(1)'; m.style.borderColor='#4a90e2'; if(bio) bio.style.display='none'; }
+    const match=q!=='' && text.includes(q);
+    if(match){
+      m.style.transform='scale(1.04)';
+      m.style.borderColor='#1b3b6f';
+      bio.style.display='block';
+      if(!firstMatch) firstMatch=m;
+      fillDetail(getMemberByCard(m));
+    } else {
+      m.style.transform='scale(1)';
+      m.style.borderColor='#4a90e2';
+      bio.style.display='none';
+    }
+  });
+  if(firstMatch) firstMatch.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function resetHighlight(){
+  document.getElementById('searchInput').value='';
+  hideDetail();
+  document.querySelectorAll('.member').forEach(m=>{
+    m.style.transform='scale(1)';
+    m.style.borderColor='#4a90e2';
+    const bio=m.querySelector('.bio');
+    if(bio) bio.style.display='none';
   });
 }
-function resetHighlight(){document.getElementById('searchInput').value=''; searchMember();}
+
+function setView(mode){
+  currentView=mode;
+  document.getElementById('toggleCards').classList.toggle('active', mode==='cards');
+  document.getElementById('toggleList').classList.toggle('active', mode==='list');
+  syncViewMode();
+}
+
+function syncViewMode(){
+  document.querySelectorAll('.member').forEach(m=>{
+    m.style.width=currentView==='list'?'100%':'190px';
+    m.style.textAlign=currentView==='list'?'left':'center';
+    m.style.justifyContent = currentView==='list'?'flex-start':'';
+  });
+}
+
+function fillDetail(member){
+  if(!member) return;
+  document.getElementById('detailName').textContent=member.name;
+  document.getElementById('detailYears').textContent=member.years + ' · ' + member.role;
+  document.getElementById('detailBio').textContent=member.bio;
+  document.getElementById('detailPanel').hidden=false;
+}
+
+function hideDetail(){
+  document.getElementById('detailPanel').hidden=true;
+}
+
+function getMemberByCard(card){
+  const id=parseInt(card.id.replace('m',''),10);
+  return members.find(m=>m.id===id);
+}
+
+function buildLegend(){
+  const legend=document.getElementById('legend');
+  legend.innerHTML='';
+  Object.entries(roleColors).forEach(([role,color])=>{
+    const tag=document.createElement('div');
+    tag.className='tag';
+    tag.innerHTML=`<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${color}"></span> ${role}`;
+    legend.appendChild(tag);
+  });
+}
+
+function buildStats(){
+  const statsContainer=document.getElementById('stats');
+  const total=members.length;
+  const oldest=Math.min(...members.map(m=>parseInt(m.years,10)));
+  const pets=members.filter(m=>m.role==='Питомец').length;
+  const children=members.filter(m=>['Сын','Дочь'].includes(m.role)).length;
+  const items=[
+    {label:'Всего человек',value:total},
+    {label:'Самый ранний год',value:oldest},
+    {label:'Дети',value:children},
+    {label:'Питомцы',value:pets}
+  ];
+  statsContainer.innerHTML='';
+  items.forEach(item=>{
+    const card=document.createElement('div');
+    card.className='stat-card';
+    card.innerHTML=`<div class="label">${item.label}</div><div class="value">${item.value}</div>`;
+    statsContainer.appendChild(card);
+  });
+}
 
 document.addEventListener('DOMContentLoaded',()=>{
   renderTree();
+  buildLegend();
+  buildStats();
 });
 </script>
 </body>
